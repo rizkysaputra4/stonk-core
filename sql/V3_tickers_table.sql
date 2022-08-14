@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS tickers (
+    ticker VARCHAR PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    ipo_date TIMESTAMP,
+    total_stock NUMERIC
+);
+
+CREATE TABLE IF NOT EXISTS lq45 (
+    id SEQUENCE PRIMARY KEY,
+    ticker VARCHAR NOT NULL,
+    sector TEXT
+);
+
+CREATE TABLE IF NOT EXISTS kompas100 (
+    id SEQUENCE PRIMARY KEY,
+    ticker VARCHAR NOT NULL
+);
