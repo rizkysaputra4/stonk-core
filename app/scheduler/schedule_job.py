@@ -3,7 +3,7 @@ import time
 
 import schedule
 
-from app.service.sync_price_data import sync_price_data
+from app.service.sync_price_data_service import sync_price_data
 
 
 def do_data_fetch_job():

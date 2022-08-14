@@ -1,7 +1,8 @@
 import os
-
+import logging
 from flask import Flask
 
+from app.configuration.logger_configuration import init_log_config
 from app.controller.price_info import price_info
 from app.controller.sync_price import yahoo_api
 from app.scheduler.schedule_job import run_job
@@ -20,9 +21,9 @@ def create_app():
 
     app.register_blueprint(price_info)
     app.register_blueprint(yahoo_api)
-
+    # init_log_config()
     register_extensions(app)
-    print("running app...")
+    logging.info("App created")
     return app
 
 
