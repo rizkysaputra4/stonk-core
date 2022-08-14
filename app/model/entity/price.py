@@ -2,6 +2,8 @@ from extension import db
 
 
 class Price(db.Model):
+    __tablename__ = 'price'
+
     ticker = db.Column(db.Integer, nullable=False)
     date = db.Column(db.Date, nullable=False)
     open = db.Column(db.Numeric, nullable=False)
@@ -9,8 +11,7 @@ class Price(db.Model):
     high = db.Column(db.Numeric, nullable=False)
     low = db.Column(db.Numeric, nullable=False)
     volume = db.Column(db.BigInteger)
-    divident = db.Column(db.Numeric)
-    stock_split = db.Column(db.Numeric)
+    adj_close = db.Column(db.Numeric)
 
     def __init__(self,
                  ticker,
@@ -20,8 +21,7 @@ class Price(db.Model):
                  high,
                  low,
                  volume,
-                 divident,
-                 stock_split,):
+                 adj_close):
         self.ticker = ticker
         self.date = date
         self.open = open
@@ -29,8 +29,7 @@ class Price(db.Model):
         self.high = high
         self.low = low
         self.volume = volume
-        self.divident = divident
-        self.stock_split = stock_split
+        self.adj_close = adj_close
 
     __mapper_args__ = {
         "primary_key": [ticker, date]
