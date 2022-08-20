@@ -22,9 +22,9 @@ def sync_price_data():
         else:
             continue
 
-        string_current_date = f'{datetime.now():%Y-%m-%d}'
+        string_current_date = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
         raw_data = yf.download(company.ticker + '.JK', period=period, start=string_last_date, end=string_current_date)
-
+        print(raw_data.tail(2))
         for index, (date, row) in enumerate(raw_data.iterrows()):
             if price is not None and price.date >= date:
                 continue

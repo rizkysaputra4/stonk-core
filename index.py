@@ -1,8 +1,8 @@
-import os
 import logging
+import os
+
 from flask import Flask
 
-from app.configuration.logger_configuration import init_log_config
 from app.controller.price_info import price_info
 from app.controller.sync_price import yahoo_api
 from app.scheduler.schedule_job import run_job
