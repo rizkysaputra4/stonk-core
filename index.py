@@ -3,8 +3,9 @@ import os
 
 from flask import Flask
 
+from app.controller.portfolio import portfolio
 from app.controller.price_info import price_info
-from app.controller.sync_price import yahoo_api
+from app.controller.sync_price import sync_price
 from app.scheduler.schedule_job import run_job
 from extension import db
 
@@ -20,7 +21,8 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     app.register_blueprint(price_info)
-    app.register_blueprint(yahoo_api)
+    app.register_blueprint(sync_price)
+    app.register_blueprint(portfolio)
     # init_log_config()
     register_extensions(app)
     logging.info("App created")
