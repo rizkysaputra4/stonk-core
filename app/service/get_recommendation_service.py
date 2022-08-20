@@ -4,8 +4,10 @@ import pandas as pd
 import talib
 
 from app.model.dto.action_point import ActionPoint
+from app.model.dto.backtest_result import BackTestResult
 from app.repository.price_repository import get_price_history
 from app.repository.ticker_repository import get_lq45_ticker
+from app.service.back_test_service import get_estimated_profit
 
 MA_PERIOD = 50
 EMA_PERIOD = 8
@@ -16,14 +18,18 @@ def get_recommendation():
     ten_year_ago = (datetime.now() - timedelta(days=5475)).strftime('%Y-%m-%d')
     one_year_ago = (datetime.now() - timedelta(days=368)).strftime('%Y-%m-%d')
     lq45_list = get_lq45_ticker()
-    break_list = []
+    btr_list = []
     for tick in lq45_list:
         df_merged = get_price_since(tick, one_year_ago)
         if is_break_buy(df_merged):
             df_ten_year = get_price_since(tick, ten_year_ago)
-            break_list.append(tick.ticker)
             action_point = get_action_point(df_ten_year)
-            #TODO do back test
+            estimated_profit = get_estimated_profit(df_ten_year, action_point)
+            btr = BackTestResult(ticker=tick.ticker, profit=estimated_profit)
+            btr_list.append(btr)
+            btr_list.sort(key=lambda x: x.profit, reverse=True)
+    print(btr_list)
+    return btr_list
 
 
 def get_price_since(tick, since):
