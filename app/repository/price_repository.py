@@ -25,5 +25,17 @@ def get_price_history(ticker, since):
     return df
 
 
+def check_if_ticker_exist(ticker):
+    sql = "SELECT COUNT(*) as total FROM price p " \
+          "WHERE p.ticker = :ticker "
+    result = db.session.execute(sql, {'ticker': ticker})
+    Record = namedtuple('Record', result.keys())
+    records = [Record(*r) for r in result.fetchall()]
+    res = None
+    for r in records:
+        res = r.total
+    return res
+
+
 def save_all_price_data():
     print("save")
