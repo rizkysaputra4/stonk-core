@@ -25,7 +25,7 @@ def get_recommendation():
             df_ten_year = get_price_since(tick, ten_year_ago)
             action_point = get_action_point(df_ten_year)
             estimated_profit = get_estimated_profit(df_ten_year, action_point)
-            btr = BackTestResult(ticker=tick.ticker, profit=estimated_profit)
+            btr = BackTestResult(ticker=tick.ticker, profit=estimated_profit[0], hit=estimated_profit[1])
             btr_list.append(btr)
             btr_list.sort(key=lambda x: x.profit, reverse=True)
     print(btr_list)

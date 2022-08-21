@@ -14,14 +14,17 @@ def get_active_action(customer_id):
           "WHERE p.is_open " \
           "AND p.action = 'BUY' " \
           "AND p.customer_id = :customer_id"
-    result = db.session.execute(sql, {'customer_id': customer_id})
-    Record = namedtuple('Record', result.keys())
-    records = [Record(*r) for r in result.fetchall()]
     out = []
-    for r in records:
-        res = Portfolio(ticker=r.ticker, date=r.date, price=r.price, customer_id=r.customer_id,
-                        qty=r.qty, is_open=r.is_open, action=r.action)
-        out.append(res)
+    try:
+        result = db.session.execute(sql, {'customer_id': customer_id})
+        Record = namedtuple('Record', result.keys())
+        records = [Record(*r) for r in result.fetchall()]
+        for r in records:
+            res = Portfolio(ticker=r.ticker, date=r.date, price=r.price, customer_id=r.customer_id,
+                            qty=r.qty, is_open=r.is_open, action=r.action)
+            out.append(res)
+    except AttributeError:
+        print("Attribute error")
     return out
 
 

@@ -4,7 +4,7 @@ from app.repository.portfolio_repository import get_active_action
 from app.service.get_recommendation_service import get_price_since
 
 
-def sell_recommendation(user_id):
+def sell_recommendation(user_id) -> object:
     active_action = get_active_action(user_id)
     result_sell = set()
     one_year_ago = (datetime.now() - timedelta(days=368)).strftime('%Y-%m-%d')
