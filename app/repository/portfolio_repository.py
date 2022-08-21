@@ -1,7 +1,7 @@
 from collections import namedtuple
 
+from app.configuration.extension import db
 from app.model.entity.portfolio import Portfolio
-from extension import db
 
 
 def save_action(data):

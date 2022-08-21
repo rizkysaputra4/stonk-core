@@ -2,8 +2,8 @@ from collections import namedtuple
 
 import pandas as pd
 
+from app.configuration.extension import db
 from app.model.entity.price import Price
-from extension import db
 
 
 def get_latest_data(ticker):

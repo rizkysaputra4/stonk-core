@@ -1,4 +1,4 @@
-from extension import db
+from app.configuration.extension import db
 
 
 class Ticker(db.Model):

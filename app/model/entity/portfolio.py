@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from extension import db
+from app.configuration.extension import db
 
 
 class Portfolio(db.Model):

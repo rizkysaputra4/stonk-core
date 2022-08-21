@@ -1,7 +1,7 @@
 from collections import namedtuple
 
+from app.configuration.extension import db
 from app.model.entity.ticker import Ticker
-from extension import db
 
 
 def get_all_ticker():

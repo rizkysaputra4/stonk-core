@@ -1,34 +1,18 @@
-import logging
 import os
 
-from flask import Flask
+from dotenv import load_dotenv
 
-from app.controller.portfolio import portfolio
-from app.controller.price_info import price_info
-from app.controller.sync_price import sync_price
+from app.configuration.flask_configuration import create_app
 from app.scheduler.schedule_job import run_job
-from extension import db
 
 
-def register_extensions(app):
-    db.app = app
-    db.init_app(app)
+def init_dotenv():
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+    load_dotenv(os.path.join(base_dir, '.env'))
 
 
-def create_app():
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-    app.register_blueprint(price_info)
-    app.register_blueprint(sync_price)
-    app.register_blueprint(portfolio)
-    # init_log_config()
-    register_extensions(app)
-    logging.info("App created")
-    return app
-
-
-app = create_app()
-run_job()
-app.run(port=8087, debug=True)
+if __name__ == '__main__':
+    init_dotenv()
+    app = create_app()
+    run_job()
+    app.run(port=8087, debug=True)

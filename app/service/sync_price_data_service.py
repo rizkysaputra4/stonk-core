@@ -2,10 +2,10 @@ from datetime import datetime, timedelta
 
 import yfinance as yf
 
+from app.configuration.extension import db
 from app.model.entity.price import Price
 from app.repository.price_repository import get_latest_data
 from app.repository.ticker_repository import get_all_ticker
-from extension import db
 
 
 def sync_price_data():

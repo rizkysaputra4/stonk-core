@@ -1,4 +1,4 @@
-from extension import db
+from app.configuration.extension import db
 
 
 class Price(db.Model):
