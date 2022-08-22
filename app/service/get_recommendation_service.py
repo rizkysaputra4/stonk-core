@@ -20,9 +20,13 @@ def get_recommendation():
     lq45_list = get_lq45_ticker()
     btr_list = []
     for tick in lq45_list:
-        df_merged = get_price_since(tick, one_year_ago)
+        df = get_price_history(tick.ticker, one_year_ago)
+        if df.empty: continue
+        df_merged = get_price_since(df)
+        if df_merged.empty: continue
         if is_break_buy(df_merged):
-            df_ten_year = get_price_since(tick, ten_year_ago)
+            df = get_price_history(tick.ticker, ten_year_ago)
+            df_ten_year = get_price_since(df)
             action_point = get_action_point(df_ten_year)
             estimated_profit = get_estimated_profit(df_ten_year, action_point)
             btr = BackTestResult(ticker=tick.ticker, profit=estimated_profit[0], hit=estimated_profit[1])
@@ -32,8 +36,7 @@ def get_recommendation():
     return btr_list
 
 
-def get_price_since(tick, since):
-    df = get_price_history(tick.ticker, since)
+def get_price_since(df):
     ma = talib.MA(df['close'], timeperiod=MA_PERIOD)
     ma = pd.DataFrame({'moving_average': ma})
     ema_val = talib.EMA(df['close'], timeperiod=EMA_PERIOD)
@@ -48,7 +51,20 @@ def is_break_buy(df):
     today_price = df.tail(1).iloc[0]
     is_today_up = today_price['close'] > today_price['moving_average'] and today_price['close'] > today_price[
         'exponential_moving_average']
-    return is_yesterday_below and is_today_up
+    is_last_sell = is_last_position_sell(df)
+    return is_yesterday_below and is_today_up and is_last_sell
+
+
+def is_last_position_sell(df):
+    df_test = df[:-1]
+    is_last_sell = False
+    for i, row in df_test.iterrows():
+        if i == 0: continue
+        if row['close'] < row['moving_average'] and row['close'] < row['exponential_moving_average']:
+            is_last_sell = True
+        if row['close'] > row['moving_average'] and row['close'] > row['exponential_moving_average']:
+            is_last_sell = False
+    return is_last_sell
 
 
 def get_action_point(df):

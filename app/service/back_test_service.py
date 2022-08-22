@@ -15,8 +15,9 @@ def get_estimated_profit(df, action_points):
         profit = (money - MONEY) / MONEY
 
         if price_sell > price_buy: success += 1
-    hit = (success / len(action_points)) * 100
-    return [profit * 100, hit]
+
+    hit = 0 if len(action_points) == 0 else (success / len(action_points)) * 100
+    return ['{0:.3g}'.format(profit * 100), '{0:.3g}'.format(hit)]
 
 
 def get_price_action(df, date):
