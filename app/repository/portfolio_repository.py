@@ -13,7 +13,7 @@ def get_active_action(customer_id):
     sql = "SELECT * FROM portfolio  p " \
           "WHERE p.is_open " \
           "AND p.action = 'BUY' " \
-          "AND p.customer_id = :customer_id"
+          "AND p.customer_id = ':customer_id'"
     out = []
     try:
         result = db.session.execute(sql, {'customer_id': customer_id})
@@ -33,7 +33,7 @@ def get_total_lot(ticker):
           "WHERE p.ticker = :ticker " \
           "AND p.is_open " \
           "AND p.action = 'BUY' " \
-          "AND p.customer_id = :customer_id"
+          "AND p.customer_id = ':customer_id'"
     result = db.session.execute(sql, {'ticker': ticker.ticker, 'customer_id': ticker.customer_id})
     Record = namedtuple('Record', result.keys())
     records = [Record(*r) for r in result.fetchall()]

@@ -12,7 +12,8 @@ def do_data_fetch_job():
 
 
 def do_get_sell_recommendation():
-    sell = sell_recommendation(2)
+    MY_CHAT_ID = '473199101'
+    sell = sell_recommendation(MY_CHAT_ID)
     print(sell)
 
 

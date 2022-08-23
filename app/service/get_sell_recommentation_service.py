@@ -1,6 +1,7 @@
 from datetime import timedelta, datetime
 
 from app.repository.portfolio_repository import get_active_action
+from app.repository.price_repository import get_price_history
 from app.service.get_recommendation_service import get_price_since
 
 
@@ -11,7 +12,8 @@ def sell_recommendation(user_id) -> object:
     for tick in active_action:
         if tick.ticker in result_sell:
             continue
-        df_merged = get_price_since(tick, one_year_ago)
+        df = get_price_history(tick.ticker, one_year_ago)
+        df_merged = get_price_since(df)
         if is_break_sell(df_merged):
             result_sell.add(tick.ticker)
     return list(result_sell)
