@@ -6,6 +6,7 @@ from app.service.get_sell_recommentation_service import sell_recommendation
 def buy_service(data):
     if data.ticker is None or data.price is None or data.qty is None or data.customer_id is None:
         return "Error: some required element are empty"
+    data.ticker = data.ticker.upper()
     if check_if_ticker_exist(data.ticker) == 0:
         return "Error: ticker is invalid"
     save_action(data)

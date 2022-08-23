@@ -2,7 +2,7 @@ import json
 
 
 class BaseResponse:
-    def __init__(self, data, error = False, code = "00"):
+    def __init__(self, data, error=False, code="00"):
         self.data = data
         self.error = error
         self.code = code
