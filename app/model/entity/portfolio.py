@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from extension import db
+from app.configuration.extension import db
 
 
 class Portfolio(db.Model):
     __tablename__ = 'portfolio'
 
     # id = db.Column(db.Integer, nullable=False)
-    customer_id = db.Column(db.Numeric, nullable=False, primary_key=True)
+    customer_id = db.Column(db.String, nullable=False, primary_key=True)
     ticker = db.Column(db.String, nullable=False)
     action = db.Column(db.String, nullable=False)
     qty = db.Column(db.Numeric, nullable=False)
@@ -21,8 +21,8 @@ class Portfolio(db.Model):
                  price,
                  qty,
                  customer_id,
-                 is_open = True,
-                 date = datetime.now()):
+                 is_open=True,
+                 date=datetime.now()):
         self.customer_id = customer_id
         self.ticker = ticker
         self.action = action
@@ -30,7 +30,6 @@ class Portfolio(db.Model):
         self.price = price
         self.qty = qty
         self.is_open = is_open
-
 
     # def __repr__(self):
     #     return f"buy date:{self.buy}, sell date:{self.sell}>"

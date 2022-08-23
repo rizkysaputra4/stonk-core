@@ -25,7 +25,7 @@ def buy():
 
 
 @portfolio.route("/sell", methods=["POST"])
-def world():
+def sell():
     req = Portfolio(
         ticker=request.get_json().get('ticker'),
         price=request.get_json().get('price'),

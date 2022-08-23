@@ -3,11 +3,10 @@ import os
 
 from flask import Flask
 
+from app.configuration.extension import db
 from app.controller.portfolio import portfolio
 from app.controller.price_info import price_info
 from app.controller.sync_price import sync_price
-from app.scheduler.schedule_job import run_job
-from extension import db
 
 
 def register_extensions(app):
@@ -27,8 +26,3 @@ def create_app():
     register_extensions(app)
     logging.info("App created")
     return app
-
-
-app = create_app()
-run_job()
-app.run(port=8087, debug=True)

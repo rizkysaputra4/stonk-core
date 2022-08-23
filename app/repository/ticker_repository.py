@@ -1,7 +1,7 @@
 from collections import namedtuple
 
+from app.configuration.extension import db
 from app.model.entity.ticker import Ticker
-from extension import db
 
 
 def get_all_ticker():
@@ -29,4 +29,3 @@ def get_lq45_ticker():
         ticker = Ticker(ticker=r.ticker, name=r.name, ipo_date=r.ipo_date, total_stock=r.total_stock)
         tickers.append(ticker)
     return tickers
-
