@@ -22,7 +22,7 @@ def sell_service(data):
     if check_if_ticker_exist(data.ticker) == 0:
         return "Error: ticker is invalid"
     total_available_lot = get_total_lot(data)
-    data.qty = total_available_lot if data.qty is None else data.qty
+    data.qty = str(total_available_lot) if data.qty is None else data.qty
     if total_available_lot is None:
         return 'ErrorL: you dont have stock with ticker ' + data.ticker
     if Decimal(data.qty.replace(',','.')) > total_available_lot:
