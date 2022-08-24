@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from app.repository.portfolio_repository import save_action, get_total_lot, close_open_position
+from app.repository.portfolio_repository import save_action, get_total_lot, close_open_position, get_user_portfolio
 from app.repository.price_repository import check_if_ticker_exist
 from app.service.get_sell_recommentation_service import sell_recommendation
 
@@ -43,3 +43,14 @@ def recap_service(data):
     for i, data in enumerate(recap):
         result += f"\n{i + 1}. {data}"
     return result
+
+
+def get_user_portfolio_service(user_id):
+    result = get_user_portfolio(user_id)
+    if not result:
+        return "Your portfolio is empty"
+    out = "Your portfolio"
+    for i, v in enumerate(result):
+        out += f"\n{i+1}. {v.ticker}, qty: {v.qty}. price: {v.price}"
+    return out
+

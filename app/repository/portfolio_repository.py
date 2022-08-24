@@ -9,11 +9,44 @@ def save_action(data):
     db.session.commit()
 
 
+def get_user_portfolio(customer_id):
+    sql = "SELECT * FROM portfolio  p " \
+          "WHERE p.is_open " \
+          "AND p.customer_id = ':customer_id'"
+    out = []
+    try:
+        result = db.session.execute(sql, {'customer_id': customer_id})
+        Record = namedtuple('Record', result.keys())
+        records = [Record(*r) for r in result.fetchall()]
+        for r in records:
+            res = Portfolio(ticker=r.ticker, date=r.date, price=r.price, customer_id=r.customer_id,
+                            qty=r.qty, is_open=r.is_open, action=r.action)
+            out.append(res)
+    except AttributeError:
+        print("Attribute error")
+    return out
+
+
+def get_distinct_user_id():
+    sql = "SELECT DISTINCT p.customer_id FROM portfolio p"
+    out = []
+    try:
+        result = db.session.execute(sql)
+        Record = namedtuple('Record', result.keys())
+        records = [Record(*r) for r in result.fetchall()]
+        for r in records:
+            res = r.customer_id
+            out.append(res)
+    except AttributeError:
+        print("Attribute error")
+    return out
+
+
 def get_active_action(customer_id):
     sql = "SELECT * FROM portfolio  p " \
           "WHERE p.is_open " \
           "AND p.action = 'BUY' " \
-          "AND p.customer_id = ':customer_id'"
+          "AND p.customer_id = :customer_id"
     out = []
     try:
         result = db.session.execute(sql, {'customer_id': customer_id})
