@@ -1,8 +1,8 @@
 import logging
-import os
 
 from flask import Flask
 
+from app.configuration.config import DATABASE_URL
 from app.configuration.extension import db
 from app.controller.portfolio import portfolio
 from app.controller.price_info import price_info
@@ -16,7 +16,7 @@ def register_extensions(app):
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     app.register_blueprint(price_info)
