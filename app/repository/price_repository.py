@@ -37,5 +37,10 @@ def check_if_ticker_exist(ticker):
     return res
 
 
+def delete_today_price():
+    sql = "DELETE FROM price p WHERE p.date = current_date"
+    db.session.execute(sql)
+
+
 def save_all_price_data():
     print("save")

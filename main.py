@@ -6,4 +6,4 @@ from waitress import serve
 if __name__ == '__main__':
     app = create_app()
     run_job()
-    app.run(port=8087, debug=True)
+    serve(app, port=8087)
