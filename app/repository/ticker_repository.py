@@ -19,7 +19,7 @@ def get_all_ticker():
 
 
 def get_lq45_ticker():
-    sql = "select t.* from kompas100 l " \
+    sql = "select t.* from tickers l " \
           "left join tickers t on l.ticker = t.ticker"
     result = db.session.execute(sql)
     Record = namedtuple('Record', result.keys())
