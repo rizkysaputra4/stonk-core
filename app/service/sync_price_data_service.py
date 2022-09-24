@@ -4,12 +4,13 @@ import yfinance as yf
 
 from app.configuration.extension import db
 from app.model.entity.price import Price
-from app.repository.price_repository import get_latest_data
+from app.repository.price_repository import get_latest_data, delete_today_price
 from app.repository.ticker_repository import get_all_ticker
 
 
 def sync_price_data():
     tickers = get_all_ticker()
+    delete_today_price()
     for company in tickers:
         print(company.ticker)
         price = get_latest_data(company.ticker)
