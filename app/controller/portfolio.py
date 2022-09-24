@@ -3,7 +3,7 @@ from flask import Blueprint, request
 
 from app.model.entity.portfolio import Portfolio
 from app.model.response.sync_data_response import BaseResponse
-from app.service.portfolio_action import buy_service, sell_service, recap_service
+from app.service.portfolio_action import buy_service, sell_service, recap_service, get_user_portfolio_service
 
 portfolio = Blueprint('portfolio', __name__)
 
@@ -43,6 +43,14 @@ def sell():
 @portfolio.route("/recap", methods=["POST"])
 def analyze():
     out = recap_service(request.get_json().get('customerId'))
+    resp = flask.Response(BaseResponse(data=out).toJSON())
+    resp.headers["Content-Type"] = "application/json"
+    return resp
+
+
+@portfolio.route("/portfolio", methods=["GET"])
+def get_portfolio():
+    out = get_user_portfolio_service(request.get_json().get('customerId'))
     resp = flask.Response(BaseResponse(data=out).toJSON())
     resp.headers["Content-Type"] = "application/json"
     return resp
