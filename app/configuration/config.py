@@ -1,4 +1,4 @@
 DEBUG=True
 FLASK_ENV="development"
-DATABASE_URL="postgresql://devcore:dev_c0re_123@47.254.251.52/stonk_dev"
+DATABASE_URL="postgresql://postgres:postgres@localhost/stonk"
 TELEGRAM_BOT="5662470305:AAGb877FNpO17drnFy4OnT5mx9o6UOXCQ0U"
