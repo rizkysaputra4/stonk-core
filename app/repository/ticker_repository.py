@@ -2,11 +2,14 @@ from collections import namedtuple
 
 from app.configuration.extension import db
 from app.model.entity.ticker import Ticker
+from sqlalchemy import text
 
 
 def get_all_ticker():
     try:
-        result = db.session.execute("SELECT * FROM tickers")
+        result = db.session.execute(
+            text("SELECT * FROM tickers")
+        )
         Record = namedtuple('Record', result.keys())
         records = [Record(*r) for r in result.fetchall()]
         tickers = []
@@ -19,8 +22,11 @@ def get_all_ticker():
 
 
 def get_lq45_ticker():
-    sql = "select t.* from tickers l " \
-          "left join tickers t on l.ticker = t.ticker"
+    sql = text("""
+    SELECT t.*
+    FROM tickers l
+    LEFT JOIN tickers t ON l.ticker = t.ticker
+""")
     result = db.session.execute(sql)
     Record = namedtuple('Record', result.keys())
     records = [Record(*r) for r in result.fetchall()]

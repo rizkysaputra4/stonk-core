@@ -2,33 +2,42 @@ from collections import namedtuple
 
 from app.configuration.extension import db
 from app.model.entity.portfolio import Portfolio
+from sqlalchemy import text
 
 
 def save_action(data):
     db.session.add(data)
     db.session.commit()
 
-
 def get_user_portfolio(customer_id):
-    sql = "SELECT * FROM portfolio  p " \
-          "WHERE p.is_open " \
-          "AND p.customer_id = ':customer_id'"
+    sql = text("""
+        SELECT *
+        FROM portfolio p
+        WHERE p.is_open = true
+        AND p.customer_id = :customer_id
+    """)
+
+    result = db.session.execute(sql, {"customer_id": customer_id})
+
     out = []
-    try:
-        result = db.session.execute(sql, {'customer_id': customer_id})
-        Record = namedtuple('Record', result.keys())
-        records = [Record(*r) for r in result.fetchall()]
-        for r in records:
-            res = Portfolio(ticker=r.ticker, date=r.date, price=r.price, customer_id=r.customer_id,
-                            qty=r.qty, is_open=r.is_open, action=r.action)
-            out.append(res)
-    except AttributeError:
-        print("Attribute error")
+    for r in result.mappings():
+        out.append(
+            Portfolio(
+                ticker=r["ticker"],
+                date=r["date"],
+                price=r["price"],
+                customer_id=r["customer_id"],
+                qty=r["qty"],
+                is_open=r["is_open"],
+                action=r["action"],
+            )
+        )
     return out
 
 
+
 def get_distinct_user_id():
-    sql = "SELECT DISTINCT p.customer_id FROM portfolio p"
+    sql = text("""SELECT DISTINCT p.customer_id FROM portfolio p""")
     out = []
     try:
         result = db.session.execute(sql)
@@ -43,10 +52,13 @@ def get_distinct_user_id():
 
 
 def get_active_action(customer_id):
-    sql = "SELECT * FROM portfolio  p " \
-          "WHERE p.is_open " \
-          "AND p.action = 'BUY' " \
-          "AND p.customer_id = :customer_id"
+    sql = text("""
+    SELECT *
+    FROM portfolio p
+    WHERE p.is_open = true
+      AND p.action = 'BUY'
+      AND p.customer_id = :customer_id
+""")
     out = []
     try:
         result = db.session.execute(sql, {'customer_id': customer_id})
@@ -62,11 +74,14 @@ def get_active_action(customer_id):
 
 
 def get_total_lot(ticker):
-    sql = "SELECT SUM(p.qty) FROM portfolio  p " \
-          "WHERE p.ticker = :ticker " \
-          "AND p.is_open " \
-          "AND p.action = 'BUY' " \
-          "AND p.customer_id = ':customer_id'"
+    sql = text("""
+    SELECT SUM(p.qty)
+    FROM portfolio p
+    WHERE p.ticker = :ticker
+      AND p.is_open = true
+      AND p.action = 'BUY'
+      AND p.customer_id = :customer_id
+""")
     result = db.session.execute(sql, {'ticker': ticker.ticker, 'customer_id': ticker.customer_id})
     Record = namedtuple('Record', result.keys())
     records = [Record(*r) for r in result.fetchall()]
@@ -77,7 +92,11 @@ def get_total_lot(ticker):
 
 
 def close_open_position(ticker):
-    sql = "update portfolio set is_open = false " \
-          "where ticker = :ticker " \
-          "and is_open = true and action = 'BUY'"
+    sql = text("""
+    UPDATE portfolio
+    SET is_open = false
+    WHERE ticker = :ticker
+      AND is_open = true
+      AND action = 'BUY'
+""")
     result = db.session.execute(sql, {'ticker': ticker})
