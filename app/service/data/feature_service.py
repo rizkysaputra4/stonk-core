@@ -9,3 +9,7 @@ class FeatureService:
     @staticmethod
     def list_features(name=None, stability=None):
         return FeatureRepository.get_all(name, stability)
+
+    @staticmethod
+    def get_feature(feature_name, version):
+        return FeatureRepository.get_by_key(feature_name, version)

@@ -34,3 +34,24 @@ def list_features():
         }
         for f in features
     ]), 200
+
+@feature_bp.route("/features/<string:feature_name>/<string:version>", methods=["GET"])
+def get_feature(feature_name, version):
+    feature = FeatureService.get_feature(feature_name, version)
+
+    if not feature:
+        return jsonify({"error": "feature not found"}), 404
+
+    return jsonify({
+        "feature_name": feature.feature_name,
+        "version": feature.version,
+        "description": feature.description,
+        "owner": feature.owner,
+        "source_table": feature.source_table,
+        "source_column": feature.source_column,
+        "compute_fn": feature.compute_fn,
+        "default_params": feature.default_params,
+        "dtype": feature.dtype,
+        "stability": feature.stability,
+        "created_at": feature.created_at.isoformat()
+    }), 200

@@ -18,3 +18,10 @@ class FeatureRepository:
         if stability:
             q = q.filter(Feature.stability == stability)
         return q.all()
+
+    @staticmethod
+    def get_by_key(feature_name, version):
+        return Feature.query.filter_by(
+            feature_name=feature_name,
+            version=version
+        ).first()
