@@ -15,7 +15,6 @@ def sync_data_route():
     resp.headers["Content-Type"] = "application/json"
     return resp
 
-
 @sync_price.route("/today-pick", methods=["GET"])
 def get_today_pick():
     data = get_recommendation()

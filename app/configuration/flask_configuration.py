@@ -4,6 +4,8 @@ from flask import Flask
 
 from app.configuration.config import DATABASE_URL
 from app.configuration.extension import db
+from app.controller.data_controller import feature_bp
+from app.controller.label_controller import label_bp
 from app.controller.portfolio import portfolio
 from app.controller.price_info import price_info
 from app.controller.sync_price import sync_price
@@ -22,6 +24,8 @@ def create_app():
     app.register_blueprint(price_info)
     app.register_blueprint(sync_price)
     app.register_blueprint(portfolio)
+    app.register_blueprint(feature_bp)
+    app.register_blueprint(label_bp)
     # init_log_config()
     register_extensions(app)
     logging.info("App created")

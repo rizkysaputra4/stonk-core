@@ -11,35 +11,61 @@ from app.repository.ticker_repository import get_all_ticker
 def sync_price_data():
     tickers = get_all_ticker()
     delete_today_price()
+
+    today = datetime.now().date()
+    tomorrow = today + timedelta(days=1)
+
     for company in tickers:
         print(company.ticker)
+
         price = get_latest_data(company.ticker)
+
+        start = None
         period = None
-        string_last_date = None
+
         if price is None:
-            period = 'max'
-        elif price.date is not None and price.date < datetime.now().date():
-            string_last_date = (price.date + timedelta(days=1)).strftime('%Y-%m-%d')
+            period = "max"
+        elif price.date < today:
+            start = price.date + timedelta(days=1)
         else:
             continue
 
-        string_current_date = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
-        raw_data = yf.download(company.ticker + '.JK', period=period, start=string_last_date, end=string_current_date)
-        print(raw_data.tail(2))
-        for index, (date, row) in enumerate(raw_data.iterrows()):
-            if price is not None and price.date >= date:
-                continue
-            stock_price = Price(
-                ticker=company.ticker,
-                date=date,
-                open=row['Open'],
-                high=row['High'],
-                low=row['Low'],
-                close=row['Close'],
-                volume=row['Volume'],
-                adj_close=row['Adj Close']
+        raw_data = yf.download(
+            company.ticker + ".JK",
+            start=start.strftime("%Y-%m-%d") if start else None,
+            end=tomorrow.strftime("%Y-%m-%d"),
+            period=period,
+            auto_adjust=False,
+            progress=False,
+            threads=False,
             )
-            db.session.add(stock_price)
-            if index is len(raw_data) - 1 or index % 100 == 0:
+
+        if raw_data.empty:
+            continue
+
+        for i, (date, row) in enumerate(raw_data.iterrows()):
+            if price and price.date >= date.date():
+                continue
+
+            if row.isna().any():
+                continue
+
+            db.session.add(
+                Price(
+                    ticker=company.ticker,
+                    date=date.to_pydatetime(),
+                    open=float(row["Open"]),
+                    high=float(row["High"]),
+                    low=float(row["Low"]),
+                    close=float(row["Close"]),
+                    volume=int(row["Volume"]),
+                    adj_close=float(row["Adj Close"]),
+                )
+            )
+
+            if i % 100 == 0:
                 db.session.commit()
+
         db.session.commit()
+
+
